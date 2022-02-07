@@ -20,7 +20,7 @@
         <div class="form-group">
             <label for="exampleSelect">Nama Barang</label>
             <select name="id_barang" class="form-control" id="id_barang">
-                <option value="" disabled>Pilih Barang</option>
+                <option value="" disabled selected>==Pilih Barang==</option>
                 @foreach($barang as $b)
                 <option value="{{ $b->id }}">{{ $b->nama_barang }}</option>
                 @endforeach
@@ -33,7 +33,7 @@
 
         <div class="form-group">
             <label for="exampleSelect">Jumlah Beli</label>
-            <input class="form-control" placeholder="masukan jumlah beli" name="jml_beli" type="text" required>
+            <input class="form-control" placeholder="Masukan jumlah beli" name="jml_beli" type="text" required>
         </div>
 
         <div class="text-right">
