@@ -2,6 +2,7 @@
     <x-slot name="title">
         Harga
     </x-slot>
+
     @if(session()->has('success'))
     <x-alert type="success" message="{{ session()->get('success') }}" />
     @endif

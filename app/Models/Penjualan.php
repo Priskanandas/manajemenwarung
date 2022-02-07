@@ -10,22 +10,21 @@ class Penjualan extends Model
     use HasFactory;
 
     protected $table = 'penjualan';
-<<<<<<< Updated upstream
-    protected $primaryKey = 'id_penjualan';
-    protected $guarded = [];
-
-    public function member()
-    {
-        return $this->hasOne(Member::class, 'id_member', 'id_member');
-    }
-=======
     protected $primaryKey = 'id';
     protected $fillable = [  'id_barang', 'id_pelayan', 'id_pembayaran', 'satuan', 'tanggal', 'harga_barang', 'jml_beli', 'total_harga'
 ];
->>>>>>> Stashed changes
+
 
     public function user()
     {
-        return $this->hasOne(User::class, 'id', 'id_user');
+        return $this->belongsTo (User::class, 'id_pelayan','id_pelayan');
+}
+    public function barang()
+    {
+        return $this->belongsTo (Barang::class, 'id_barang', 'id_barang');
+    }
+    public function pembayaran()
+    {
+        return $this->belongsTo (Pembayaran::class, 'id_pembayaran', 'id_pembayaran');
     }
 }
