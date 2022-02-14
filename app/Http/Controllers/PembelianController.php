@@ -10,55 +10,67 @@ use Carbon\Carbon;
 use App\Models\Pembelian;
 use App\Models\Barang;
 use DB;
+use Illuminate\Support\Arr;
 
 class PembelianController extends Controller
 {
-    /**
-    * Show pembelian
-    *
-    * @return \Illuminate\Http\Response
-    */
-    public function index()
+    public function index(Request $request)
     {
-        $pembelian = Pembelian::select(DB::raw("pembelian.id, nama_barang, tanggal_beli, jml_beli"))                                    
+        $pembelian = DB::table('pembelian')
         ->join('barang', 'pembelian.id_barang', '=', 'barang.id')
+        ->select('pembelian.*', 'barang.nama_barang')
         ->get();
-  
-  return view('admin.pembelian.pembelian',['pembelian'=>$pembelian]);
-
+        return view('admin.pembelian.pembelian',['pembelian'=>$pembelian]);
     }
 
-    public function create($id)
+    public function tambah()
     {
-        $pembelian = new Pembelian();
-        $pembelian->id_barang = $id;
-        $pembelian->tanggal_beli  = 0;
-        $pembelian->jml_beli = 0;
-        $pembelian->save();
-
-        session(['id_pembelian' => $pembelian->id_pembelian]);
-        session(['id_barang' => $pembelian->id_barang]);
-
-        return redirect()->route('admin.pembelian.pembelian');
+        $barang = Barang::all();
+        return view ('admin.pembelian.tambah',compact('barang'));
     }
 
     public function store(Request $request)
     {
-       
+        $request->validate([
+            'tanggal_beli' => 'required',
+            'jml_beli' => 'required'
+
+        ]);
+
+        Pembelian::create($request->all());
+
+        return redirect()->route('admin.pembelian')
+                        ->with('success','Pembelian created successfully');
+    }
+
+    public function edit($id)
+    {
+        $pembelian = Pembelian::find($id);
+        $barang = Barang::all();
+
+        return view('admin.pembelian.edit',compact('pembelian','barang'));
     }
 
     public function update(Request $request, $id)
     {
-       
+        $request->validate([
+            'tanggal_beli' => 'required',
+            'jml_beli' => 'required'
+
+        ]);
+        $input=$request->all();
+        $pembelian = Pembelian::find($id);
+        $pembelian ->update ($input);
+
+
+        return redirect()->route('admin.pembelian')
+                        ->with('success','Pembelian updated successfully');
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
-       
-    }
-
-    public function loadForm($diskon, $total)
-    {
-     
+        Pembelian::find($id)->delete();
+        return redirect()->route('admin.pembelian')
+                        ->with('success','Pembelian deleted successfully');
     }
 }

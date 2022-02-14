@@ -23,14 +23,14 @@ class CreateBarangTable extends Migration
             $table->integer('stok');
             $table->integer('total_barang');
             $table->integer('harga_ecer');
-            $table->integer('harga grosir');
+            $table->integer('harga_grosir');
             $table->timestamps();
         });
             Schema::table('barang', function($table) {
-            
+
             $table->foreign('id_kategori')->references('id')->on('kategori');
         });
-       
+
     }
 
     /**

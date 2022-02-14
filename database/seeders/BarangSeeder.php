@@ -23,7 +23,7 @@ class BarangSeeder extends Seeder
            'stok'=> 1,
            'total_barang'=> 20,
            'harga_ecer'=> 3500,
-           'harga grosir'=> 70000
+           'harga_grosir'=> 70000
         ]);
     }
 }

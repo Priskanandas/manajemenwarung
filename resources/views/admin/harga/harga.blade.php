@@ -3,57 +3,17 @@
         Harga
     </x-slot>
 
-<<<<<<< Updated upstream
+    @if(session()->has('success'))
+    <x-alert type="success" message="{{ session()->get('success') }}" />
+    @endif
+    <x-card>
+        <x-slot name="title">All Harga</x-slot>
+        <x-slot name="option">
+            <a href="{{ route('admin.harga.create') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i>
+            </a>
+        </x-slot>
 
-    <div>
-        <a href="#" class="btn btn-success">
-            Tambah<i class="fas fa-plus-circle" style="margin-left:10px;"></i>
-        </a>
-    </div>
-    <!-- /.box-header -->
-    <table id="table-product" class="table table-bordered" style="width:100%;">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Id Pembelian</th>
-                <th>Id Barang</th>
-                <th>Tanggal Beli</th>
-                <th>Jumlah Beli</th>
-                <th>Harga Ecer</th>
-                <th>Harga Grosir</th>
-                <th>Harga Jual</th>
-                <th>active</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($harga as $list)
-            <tr>
-                <td>{{$list->id}}</td>
-                <td>{{$list->nama_warung}}</td>
-                <td>{{$list->alamat}}</td>
-                <td style="text-align: right">
-                    <button class="btn btn-info" data-toggle="modal" data-fid="{{$list->id}}"
-                        data-fwarung="{{$list->nama_warung}}" data-fmin="{{$list->alamat}}" data-target="#editwarung">
-                        Edit
-                    </button>
-                    /
-                    <button class="btn btn-danger" data-fid="{{$list->id}}" data-toggle="modal"
-                        data-target="#deleteharga">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-   
-=======
-    <div class="col text-right">
-        <a href="{{ route('admin.pembelian.tambah') }}" class="btn btn-primary">Tambah</a>
-    </div>
-    <div class="table-responsive">
         <table class="table table-bordered table-hovered" id="table">
             <thead>
                 <tr align="center">
@@ -93,10 +53,8 @@
                 @endforeach
             </tbody>
         </table>
-    </div>
+</x-card>
 
-
->>>>>>> Stashed changes
 
     <x-slot name="script">
         <script src="{{ asset('dist/js/demo/chart-area-demo.js') }}"></script>

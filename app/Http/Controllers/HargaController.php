@@ -10,15 +10,34 @@ use Carbon\Carbon;
 use App\Models\Harga;
 use App\Models\Pembelian;
 use App\Models\Barang;
+use Response;
 use DB;
 
 class HargaController extends Controller
 {
-    /**
-    * Show harga
-    *
-    * @return \Illuminate\Http\Response
-    */
+
+
+    public function simpan_data (Request $request){
+    //    dd($request->all());
+
+    $data = new Hrg;
+
+    $data->nim = $request->nim;
+    $data->nama = $request->nama;
+    $data->jeniskelamin = $request->jeniskelamin;
+    $data->jurusan = $request->jurusan;
+    $data->notelp = $request->notelp;
+    $data->email = $request->email;
+    $data->alamat = $request->alamat;
+
+    $data->save();
+
+    return redirect()->back()->with('ok');
+    
+  
+
+        
+    } 
     public function index()
     {
 
@@ -31,108 +50,84 @@ class HargaController extends Controller
   return view('admin.harga.harga',['harga'=>$harga]);
     }
 
-    /**
-    * Show activity logs
-    *
-    * @return \Illuminate\Http\Response
-    */
-    public function activity_logs()
-    {
-        $logs = Activity::where('causer_id', auth()->id())->latest()->paginate(10);
+    public function create(Request $request)
+    { 
+        $harga = Harga::all();
+        $barang = Barang::all();
+        $pembelian = Pembelian::all();
 
-        return view('admin.logs', compact('logs'));
+        return view ('admin.harga.create',compact('barang', 'pembelian', 'harga'));
     }
 
-	/**
-	* Store settings into database
-	*
-	* @param $request
-    * @return \Illuminate\Http\Response
-	*/
-    public function settings_store(SettingRequest $request)
+    public function ajax($id){
+       
+        //$data = Mahasiswa::all();
+        //$data = DB::table('harga')
+        //$harga = Harga::all();
+
+        $data = Harga::where('id_barang', $id)->first();
+        //dd($data);
+       // return response()->json($harga, $barang);
+
+        //return response()->json($data, 200);
+        return json_encode($data);
+       // $harga = Harga::where('id_barang', $request->get('id'))
+         //   ->pluck('harga_ecer', 'id');
+
+        //return response()->json($harga);
+        //$harga = DB::table('harga')->pluck("harga_ecer","id");
+        //return view('admin.harga.create',compact('harga'));
+    }
+    public function getBarang($id) 
     {
-    	// when you upload a logo image
-    	if($request->file('logo')) {
-	    	$filename = $request->file('logo')->getClientOriginalName();
-	    	$filePath = $request->file('logo')->storeAs('uploads', $filename, 'public');
-	    	setting()->set('logo', $filePath);
-    	}
-
-    	setting()->set('site_name', $request->site_name);
-    	setting()->set('keyword', $request->keyword);
-    	setting()->set('description', $request->description);
-    	setting()->set('url', $request->url);
-
-    	// save all
-    	setting()->save();
-    	return redirect()->back()->with('success', 'Settings has been successfully saved');
+        $barang = DB::table("barang")->where("id_barang",$id)->pluck("harga_ecer","id");
+        return json_encode($barang);
     }
 
-    /**
-    * Update profile user
-    *
-    * @param $request
-    * @return \Illuminate\Http\Response
-    */
-    public function profile_update(Request $request)
+    
+    public function store(Request $request)
     {
-        $data = ['name' => $request->name];
+        $request->validate([
 
-        // if password want to change
-        if($request->old_password && $request->new_password) {
-            // verify if password is match
-            if(!Hash::check($request->old_password, auth()->user()->password)) {
-                session()->flash('failed', 'Password is wrong!');
-                return redirect()->back();
-            }
-
-            $data['password'] = Hash::make($request->new_password);
-        } 
-
-        // for update avatar
-        if($request->avatar) {
-            $data['avatar'] = $request->avatar;
-
-            if(auth()->user()->avatar) {
-                unlink(storage_path('app/public/'.auth()->user()->avatar));
-            }
-        }
+            'harga_jual' => 'required',
+            'status' => 'required'
+        ]);
         
-        // update profile
-        auth()->user()->update($data);
-        
-        return redirect()->back()->with('success', 'Profile updated!');
+        Harga::create($request->all());
+        return redirect()->route('admin.harga')
+                        ->with('success','Harga created successfully');
+                        
     }
-
-    /**
-    * Store avatar images into database
-    *
-    * @param $request
-    * @return string
-    */
-    public function upload_avatar(Request $request)
+    
+    public function edit($id)
     {
-        $request->validate(['avatar'  => 'file|image|mimes:jpg,png,svg|max:1024']);
+        $harga = Harga::find($id);
+        $barang = Barang::all();
+        $pembelian = Pembelian::all();
 
-        if($request->hasFile('avatar')){
-            $file = $request->file('avatar');
-
-            $fileName = $file->getClientOriginalName();
-            $folder = 'user-'.auth()->id();
-
-            $file->storeAs('avatars/'.$folder, $fileName, 'public');
-
-            return 'avatars/'.$folder.'/'.$fileName;
-        }
-
-        return '';
-        
+        return view('admin.harga.edit',compact('harga','barang','pembelian'));
     }
-
-    public function delete_logs()
+    
+    public function update(Request $request, $id)
     {
-        $logs = Activity::where('created_at', '<=', Carbon::now()->subWeeks())->delete();
-
-        return back()->with('success', $logs.' Logs successfully deleted!');
+        $harga = Harga::find($id);
+                $harga->update([
+                    'harga_ecer' => $request->harga_ecer,
+                    'harga_grosir' => $request->harga_grosir,
+                    'harga_jual' => $request->harga_jual,
+                    'status' => $request->status
+                ]);
+      
+    
+        return redirect()->route('admin.harga')
+                        ->with('success','Harga updated successfully');
+    }
+    
+    public function delete($id)
+    {
+        Harga::find($id)->delete();
+        return redirect()->route('admin.harga')
+                        ->with('success','Harga deleted successfully');
     }
 }
+

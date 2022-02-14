@@ -18,90 +18,6 @@ class WarungController extends Controller
     */
     public function index()
     {
-<<<<<<< Updated upstream
-        $warung = Warung::paginate(7);
-        return view('admin.warung.warung',compact('warung'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        Warung::create($request->all());
-        //dd($request->all());
-        return back();
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-        $warung_id = Warung::FindOrFail($request->id_warung);
-        $warung_id->update($request->all());
-        return back();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
-    {
-        $warung_id = Warung::FindOrFail($request->id_warung);
-        $warung_id->delete();
-        return back();
-    }
-
-    public function search(Request $request)
-    {
-        $query = $request->get('cari');
-        $hasil = Warung::where('warung', 'LIKE', '%' . $query . '%')->paginate(7);
-
-        return view('warung.result', compact('hasil', 'query'));
-=======
 
         //Ambil data kategori dari database
         $data = array(
@@ -119,15 +35,16 @@ class WarungController extends Controller
 
     public function store(Request $request)
     {
-        //Simpan datab ke database    
+        //Simpan datab ke database
         Warung::create([
             'nama_warung' => $request->nama_warung,
             'alamat' => $request->alamat
 
         ]);
-        
+
         //lalu reireact ke route admin.warung dengan mengirim flashdata(session) berhasil tambah data untuk manampilkan alert succes tambah data
-        return redirect()->route('admin.warung')->with('status','Berhasil Menambah Kategori');
+        return redirect()->route("admin.warung")
+        ->with('success','Warung created successfully');
     }
 
     public function update($id,Request $request)
@@ -140,7 +57,8 @@ class WarungController extends Controller
 
         //lalu simpan perubahan
         $warung->save();
-        return redirect()->route('admin.warung')->with('status','Berhasil Mengubah Kategori');
+        return redirect()->route('admin.warung')
+        ->with('success','Warung updated successfully');
     }
 
     //function menampilkan form edit
@@ -156,8 +74,7 @@ class WarungController extends Controller
     {
         //hapus data sesuai id dari parameter
         Warung::destroy($id);
-        
-        return redirect()->route('admin.warung')->with('status','Berhasil Mengahapus Kategori');
->>>>>>> Stashed changes
-    }
+
+        return redirect()->route('admin.warung')
+                        ->with('success','Warung deleted successfully');    }
 }
