@@ -99,9 +99,12 @@ class KategoriController extends Controller
             'nama_kategori' => 'required'
         ]);
 
-        $input = Kategori::all();
+        $input = $request->all();
         $kategori = Kategori::find($id);
         $kategori->update($input);
+
+        return redirect()->route('admin.kategori')
+                        ->with('success','kategori updated successfully');
     }
 
     /**

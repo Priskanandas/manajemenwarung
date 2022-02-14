@@ -15,7 +15,7 @@
 							<label class="mr-2">
 								<input type="checkbox" value="{{ $value->id }}" name="permission[]" /> {{ $value->name }}
 							</label>
-							
+
 							@endforeach
 						<div class="mt-3">
 							<x-button type="primary" for="submit" text="Submit" />

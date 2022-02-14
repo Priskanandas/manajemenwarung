@@ -48,7 +48,7 @@
             <span>Transaksi</span>
         </a>
         <div id="collapse1" class="collapse
-        @if (request()->is('admin/pembelian') || request()->is('admin/pembelian'))
+        @if (request()->is('admin/pembelian') || request()->is('admin/pembelian') || request()->is('admin/harga') || request()->is('admin/pembayaran'))
         show
         @endif"aria-labelledby="headingForm" data-parent="#accordionSidebar">
             <div class="collapse-inner rounded">
